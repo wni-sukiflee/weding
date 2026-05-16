@@ -1,0 +1,30 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Build output (ถ้าในอนาคต build ด้วย Vite/esbuild)
+dist/
+build/
+node_modules/
+
+# Local notes / drafts
+screenshots/
+graphify-out/
+*-backup/
+*.bak
+
+# Old/backup files
+app-v1.jsx

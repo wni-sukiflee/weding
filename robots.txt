@@ -1,0 +1,3 @@
+# Private invitation — disallow search engine indexing
+User-agent: *
+Disallow: /

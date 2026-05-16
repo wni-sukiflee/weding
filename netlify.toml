@@ -1,0 +1,38 @@
+# Netlify config — Asyah & Sukiflee wedding invitation
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  publish = "."
+  # ไม่มี build step — เป็น static site
+
+[[redirects]]
+  from = "/site"
+  to = "/Wedding%20Card.html"
+  status = 200
+
+[[redirects]]
+  from = "/letter"
+  to = "/Wedding%20Card%20v1%20(Letter).html"
+  status = 200
+
+# JSX MIME type — ให้ browser โหลด .jsx เป็น JavaScript-ish text
+[[headers]]
+  for = "/*.jsx"
+  [headers.values]
+    Content-Type = "application/javascript; charset=utf-8"
+    Cache-Control = "public, max-age=3600"
+
+# HTML — ไม่ cache เพื่อให้ update ได้ทันที
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

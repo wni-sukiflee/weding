@@ -1,0 +1,14 @@
+# Netlify / Cloudflare Pages headers
+# https://docs.netlify.com/routing/headers/
+
+/*.jsx
+  Content-Type: application/javascript; charset=utf-8
+  Cache-Control: public, max-age=3600
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*
+  X-Frame-Options: SAMEORIGIN
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

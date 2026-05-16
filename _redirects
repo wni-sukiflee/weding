@@ -1,0 +1,5 @@
+# Netlify / Cloudflare Pages redirects — pretty URLs
+# https://docs.netlify.com/routing/redirects/
+
+/site      /Wedding%20Card.html               200
+/letter    /Wedding%20Card%20v1%20(Letter).html   200

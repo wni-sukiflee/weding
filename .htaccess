@@ -1,0 +1,54 @@
+# Apache / cPanel config — Asyah & Sukiflee wedding invitation
+
+# ─── MIME types ─────────────────────────────────────────────────────
+# ให้ browser โหลด .jsx เป็น JS-ish (Babel-standalone อ่านเป็น text อยู่แล้ว
+# แต่บาง host block .jsx เลยต้อง override)
+<IfModule mod_mime.c>
+  AddType application/javascript .jsx
+  AddCharset UTF-8 .html .jsx .css
+</IfModule>
+
+# ─── Gzip/Brotli compression ────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript text/javascript application/json image/svg+xml
+</IfModule>
+
+# ─── Cache control ──────────────────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/javascript "access plus 1 hour"
+  ExpiresByType text/css "access plus 1 hour"
+  ExpiresByType image/svg+xml "access plus 1 week"
+  ExpiresByType image/png "access plus 1 week"
+  ExpiresByType image/jpeg "access plus 1 week"
+</IfModule>
+
+# ─── Pretty URLs ────────────────────────────────────────────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # /site → Wedding Card.html
+  RewriteRule ^site/?$ "Wedding%20Card.html" [L]
+
+  # /letter → Wedding Card v1 (Letter).html
+  RewriteRule ^letter/?$ "Wedding%20Card%20v1%20(Letter).html" [L]
+</IfModule>
+
+# ─── Security headers ───────────────────────────────────────────────
+<IfModule mod_headers.c>
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ─── Default file ───────────────────────────────────────────────────
+DirectoryIndex index.html
+
+# ─── Block hidden files / sensitive paths ───────────────────────────
+<FilesMatch "^\.">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(md|toml|gitignore)$">
+  Require all denied
+</FilesMatch>
