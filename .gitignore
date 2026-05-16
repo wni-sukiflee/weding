@@ -28,3 +28,5 @@ graphify-out/
 
 # Old/backup files
 app-v1.jsx
+
+.vercel
