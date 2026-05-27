@@ -1,19 +1,16 @@
 # Asyah & Sukiflee · Wedding Invitation
 
 การ์ดเชิญงานแต่งงานแบบ static site (React + Babel-in-browser)
-วันที่ 18 กรกฎาคม 2026 · Baroh, Yaha, Yala
+วันที่ 26 กรกฎาคม 2026 · Baroh, Yaha, Yala
 
 ## โครงสร้างไฟล์
 
 ```
 weding/
-├── index.html                       # หน้าแรก — ให้เลือก version
-├── Wedding Card.html                # version 1: scrollable site (โหลด site.jsx)
-├── Wedding Card v1 (Letter).html    # version 2: letter card (โหลด app.jsx)
-├── site.jsx                         # React app สำหรับ scrollable site
-├── app.jsx                          # React app สำหรับ letter card
+├── index.html                       # redirect → Wedding Card.html
+├── Wedding Card.html                # การ์ดเชิญ (โหลด site.jsx)
+├── site.jsx                         # React app
 ├── tweaks-panel.jsx                 # shared UI controls
-├── app-v1.jsx                       # backup ของ app.jsx เวอร์ชันเก่า (ไม่โหลดที่ไหน)
 │
 ├── netlify.toml                     # Netlify config
 ├── _headers                         # Netlify / Cloudflare Pages headers
@@ -81,7 +78,7 @@ location ~ \.jsx$ {
 - สถานที่ / map query
 - palette / petal density
 
-แก้ใน [site.jsx](site.jsx) (สำหรับ scrollable) และ [app.jsx](app.jsx) (สำหรับ letter)
+แก้ใน [site.jsx](site.jsx)
 
 ## หมายเหตุ
 

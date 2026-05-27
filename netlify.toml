@@ -10,11 +10,6 @@
   to = "/Wedding%20Card.html"
   status = 200
 
-[[redirects]]
-  from = "/letter"
-  to = "/Wedding%20Card%20v1%20(Letter).html"
-  status = 200
-
 # JSX MIME type — ให้ browser โหลด .jsx เป็น JavaScript-ish text
 [[headers]]
   for = "/*.jsx"

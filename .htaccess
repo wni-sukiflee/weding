@@ -30,9 +30,6 @@
 
   # /site → Wedding Card.html
   RewriteRule ^site/?$ "Wedding%20Card.html" [L]
-
-  # /letter → Wedding Card v1 (Letter).html
-  RewriteRule ^letter/?$ "Wedding%20Card%20v1%20(Letter).html" [L]
 </IfModule>
 
 # ─── Security headers ───────────────────────────────────────────────

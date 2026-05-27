@@ -26,7 +26,6 @@
     }
   ],
   "rewrites": [
-    { "source": "/site",   "destination": "/Wedding%20Card.html" },
-    { "source": "/letter", "destination": "/Wedding%20Card%20v1%20%28Letter%29.html" }
+    { "source": "/site", "destination": "/Wedding%20Card.html" }
   ]
 }

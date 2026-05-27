@@ -7,14 +7,14 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "groomFirst": "Asyah",
   "groomNick": "Asyah",
   "brideFirst": "Sukiflee",
-  "brideNick": "Suki",
+  "brideNick": "Sukilee",
   "monogramLeft": "A",
   "monogramRight": "S",
-  "dateISO": "2026-07-18",
+  "dateISO": "2026-07-26",
   "ceremonyTime": "09:00",
   "venueName": "Baroh, Yaha, Yala",
   "venueAddr": "Baroh, Yaha District, Yala, Thailand",
-  "mapQuery": "Baroh, Yaha, Yala, Thailand",
+  "mapQuery": "6.408009,101.114843",
   "palette": "cute",
   "petalDensity": "gentle"
 } /*EDITMODE-END*/;
