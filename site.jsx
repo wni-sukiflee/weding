@@ -3,13 +3,21 @@
 
 const { useState, useEffect, useRef, useMemo, useCallback } = React;
 
+// ── RSVP → Google Sheet ─────────────────────────────────────────
+// วาง "Web app URL" ที่ได้จากการ Deploy Google Apps Script ตรงนี้
+// (ขั้นตอนอยู่ในไฟล์ apps-script/README.md) ถ้าเว้นว่างไว้ ฟอร์มจะยัง
+// ทำงานได้แต่ไม่บันทึกลงชีต
+const RSVP_ENDPOINT = ""; // เช่น "https://script.google.com/macros/s/AKfyc.../exec"
+
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
-  "groomFirst": "Asyah",
-  "groomNick": "Asyah",
-  "brideFirst": "Sukiflee",
-  "brideNick": "Sukilee",
-  "monogramLeft": "A",
-  "monogramRight": "S",
+  "groomFirst": "Sukiflee",
+  "groomNick": "Sukiflee",
+  "groomPhone": "0653318250",
+  "brideFirst": "Asyah",
+  "brideNick": "Asyah",
+  "bridePhone": "0650168536",
+  "monogramLeft": "S",
+  "monogramRight": "A",
   "dateISO": "2026-07-26",
   "ceremonyTime": "09:00",
   "venueName": "Baroh, Yaha, Yala",
@@ -556,16 +564,16 @@ function Hero({ t }) {
 
       <div className="monogram-circle" style={{ marginTop: '24px' }}>
         <div className="m-text">
-          {t.monogramLeft}
-          <span className="amp">&amp;</span>
           {t.monogramRight}
+          <span className="amp">&amp;</span>
+          {t.monogramLeft}
         </div>
       </div>
 
       <div className="display hero-names">
-        {t.groomFirst}
-        <span className="amp">&amp;</span>
         {t.brideFirst}
+        <span className="amp">&amp;</span>
+        {t.groomFirst}
       </div>
 
       <div className="hero-date">{heroDate}</div>
@@ -728,29 +736,101 @@ function RsvpSection({ t }) {
     const start = new Date(`${t.dateISO}T${t.ceremonyTime}:00`);
     const end = new Date(start.getTime() + 9 * 60 * 60 * 1000);
     const fmt = (d) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-    const title = encodeURIComponent(`${t.groomFirst} & ${t.brideFirst} — Wedding`);
+    const title = encodeURIComponent(`${t.brideFirst} & ${t.groomFirst} — Wedding`);
     const loc = encodeURIComponent(t.venueName);
     return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${fmt(start)}/${fmt(end)}&location=${loc}`;
   }, [t]);
 
   const [rsvp, setRsvp] = useState(null);
+  const [name, setName] = useState('');
+  const [guests, setGuests] = useState(1);
+  const [status, setStatus] = useState('idle'); // idle | sending | done
+
+  const submit = useCallback((choice) => {
+    if (status === 'sending') return;
+    setRsvp(choice);
+    setStatus('sending');
+    const payload = {
+      response: choice,
+      name: name.trim(),
+      guests: choice === 'yes' ? Math.max(1, parseInt(guests, 10) || 1) : 1
+    };
+    const finish = () => setStatus('done');
+    if (!RSVP_ENDPOINT) { finish(); return; }
+    fetch(RSVP_ENDPOINT, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(finish).catch(finish);
+  }, [name, guests, status]);
+
+  const sending = status === 'sending';
+  const done = status === 'done';
+
   return (
     <section id="rsvp" className="rsvp-section" data-screen-label="07 RSVP">
       <div className="eyebrow">Kindly Reply</div>
       <Ornament />
       <h2 className="display" style={{ fontSize: 'clamp(36px,4.5vw,52px)', margin: '8px 0 0' }}>ท่านจะมาร่วมงานกับเราไหม?</h2>
-      <p>
-        การมาร่วมงานของท่านคือของขวัญที่ล้ำค่าที่สุดสำหรับเรา<br />
-        หากท่านสะดวก อยากให้ท่านแจ้งให้เราทราบล่วงหน้าได้เลยนะครับ
-      </p>
-      <div className="rsvp-actions">
-        <button className={`btn th ${rsvp === 'yes' ? 'primary' : ''}`} onClick={() => setRsvp('yes')}>
-          {rsvp === 'yes' ? '✓ ตอบรับแล้ว' : 'ตอบรับด้วยความยินดี'}
-        </button>
-        <button className={`btn th ${rsvp === 'no' ? 'primary' : ''}`} onClick={() => setRsvp('no')}>
-          {rsvp === 'no' ? '✓ ขอบคุณค่ะ/ครับ' : 'ขออภัย ไม่สามารถมาได้'}
-        </button>
-        <a className="btn th" href={calHref} target="_blank" rel="noreferrer">เพิ่มในปฏิทิน</a>
+      {done ?
+      <div className="rsvp-thanks">
+          {rsvp === 'yes' ?
+        <>ขอบคุณมากค่ะ/ครับ 💖<br />แล้วพบกันในวันงานนะคะ</> :
+
+        <>ขอบคุณที่แจ้งให้เราทราบค่ะ/ครับ<br />เสียดายที่ไม่ได้พบกัน แต่เราเข้าใจนะคะ 🤍</>}
+        </div> :
+
+      <>
+          <p>
+            การมาร่วมงานของท่านคือของขวัญที่ล้ำค่าที่สุดสำหรับเรา<br />
+            หากท่านสะดวก อยากให้ท่านแจ้งให้เราทราบล่วงหน้าได้เลยนะครับ
+          </p>
+          <div className="rsvp-form">
+            <input
+            className="rsvp-input"
+            type="text"
+            placeholder="ชื่อของท่าน (ไม่บังคับ)"
+            value={name}
+            onChange={(e) => setName(e.target.value)} />
+
+            <label className="rsvp-guests">
+              <span>ถ้ามา จะมาด้วยกันกี่ท่าน?</span>
+              <input
+              className="rsvp-input rsvp-num"
+              type="number"
+              min="1"
+              value={guests}
+              onChange={(e) => setGuests(e.target.value)} />
+            </label>
+          </div>
+          <div className="rsvp-actions">
+            <button className="btn th primary" disabled={sending} onClick={() => submit('yes')}>
+              {sending && rsvp === 'yes' ? 'กำลังส่ง…' : 'ตอบรับด้วยความยินดี'}
+            </button>
+            <button className="btn th" disabled={sending} onClick={() => submit('no')}>
+              {sending && rsvp === 'no' ? 'กำลังส่ง…' : 'ขออภัย ไม่สามารถมาได้'}
+            </button>
+            <a className="btn th" href={calHref} target="_blank" rel="noreferrer">เพิ่มในปฏิทิน</a>
+          </div>
+        </>}
+
+      <div className="rsvp-contact">
+        <div className="rsvp-contact-title">สอบถามเพิ่มเติม / ยืนยันการเข้าร่วม</div>
+        <div className="rsvp-contact-list">
+          {t.bridePhone &&
+          <a className="contact-item" href={`tel:${t.bridePhone}`}>
+              <span className="contact-role">เจ้าสาว · {t.brideNick}</span>
+              <span className="contact-phone">☎ {t.bridePhone}</span>
+            </a>
+          }
+          {t.groomPhone &&
+          <a className="contact-item" href={`tel:${t.groomPhone}`}>
+              <span className="contact-role">เจ้าบ่าว · {t.groomNick}</span>
+              <span className="contact-phone">☎ {t.groomPhone}</span>
+            </a>
+          }
+        </div>
       </div>
     </section>);
 
@@ -761,7 +841,7 @@ function Footer({ t }) {
     <footer className="footer">
       <div className="signoff">With all our love,</div>
       <div className="names-small">
-        {t.groomNick}<span className="heart">♥</span>{t.brideNick}
+        {t.brideNick}<span className="heart">♥</span>{t.groomNick}
       </div>
     </footer>);
 
@@ -793,9 +873,9 @@ function IntroCover({ t, open, onOpen }) {
       <div className="intro-content">
         <div className="intro-eyebrow">Save the Date</div>
         <div className="intro-divider">MMXXVI</div>
-        <div className="intro-couple">{t.groomFirst}</div>
-        <div className="intro-amp">&amp;</div>
         <div className="intro-couple">{t.brideFirst}</div>
+        <div className="intro-amp">&amp;</div>
+        <div className="intro-couple">{t.groomFirst}</div>
         <div className="intro-date">{dateLabel}</div>
 
         <button
@@ -807,9 +887,9 @@ function IntroCover({ t, open, onOpen }) {
           <div className="intro-seal">
             <div className="intro-seal-ring"></div>
             <div className="intro-seal-inner">
-              {t.monogramLeft}
-              <span className="amp">&amp;</span>
               {t.monogramRight}
+              <span className="amp">&amp;</span>
+              {t.monogramLeft}
             </div>
           </div>
         </button>
@@ -880,6 +960,8 @@ function App() {
         <TweakText label="Bride monogram" value={t.monogramRight} onChange={(v) => setTweak('monogramRight', v)} />
         <TweakText label="Groom nickname" value={t.groomNick} onChange={(v) => setTweak('groomNick', v)} />
         <TweakText label="Bride nickname" value={t.brideNick} onChange={(v) => setTweak('brideNick', v)} />
+        <TweakText label="Groom phone" value={t.groomPhone} onChange={(v) => setTweak('groomPhone', v)} />
+        <TweakText label="Bride phone" value={t.bridePhone} onChange={(v) => setTweak('bridePhone', v)} />
 
         <TweakSection label="Date & Time" />
         <TweakText label="Date (YYYY-MM-DD)" value={t.dateISO} onChange={(v) => setTweak('dateISO', v)} />

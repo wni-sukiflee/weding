@@ -50,6 +50,8 @@
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
     overflow-x:hidden;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
   }
 
   /* shared text */
@@ -129,6 +131,7 @@
   /* ───────────────────────── HERO ───────────────────────── */
   .hero{
     min-height:100vh;
+    min-height:100svh;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
     text-align:center;
     padding:60px 24px;
@@ -669,6 +672,73 @@
     display:flex;gap:12px;justify-content:center;flex-wrap:wrap;
     margin-top:28px;
   }
+  /* RSVP form fields */
+  .rsvp-form{
+    display:flex;flex-direction:column;gap:12px;
+    max-width:360px;margin:26px auto 0;
+  }
+  .rsvp-input{
+    font-family:"Noto Serif Thai","Cormorant Garamond",serif;
+    font-size:16px;color:var(--ink);
+    padding:13px 16px;
+    border:1px solid var(--line);border-radius:12px;
+    background:rgba(255,255,255,.65);
+    text-align:center;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .rsvp-input::placeholder{color:var(--ink-mute)}
+  .rsvp-input:focus{
+    outline:none;border-color:var(--rose-deep);
+    box-shadow:0 0 0 3px rgba(209,141,139,.15);
+  }
+  .rsvp-guests{
+    display:flex;align-items:center;justify-content:center;gap:12px;
+    font-family:"Noto Serif Thai",serif;
+    font-size:15px;color:var(--ink-soft);
+  }
+  .rsvp-num{width:84px;padding:11px 12px}
+  .btn:disabled{opacity:.6;cursor:default;transform:none;box-shadow:none}
+  .rsvp-thanks{
+    font-family:"Noto Serif Thai","Cormorant Garamond",serif;
+    font-size:clamp(17px,2vw,20px);line-height:1.85;
+    color:var(--ink);
+    margin:26px auto 0;max-width:420px;
+    padding:26px 28px;
+    border:1px solid var(--line);border-radius:16px;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(234,181,179,.18), transparent 70%),
+      rgba(255,255,255,.55);
+    box-shadow:0 6px 20px rgba(176,106,104,.08);
+  }
+  .rsvp-contact{margin-top:40px}
+  .rsvp-contact-title{
+    font-family:"Cormorant Garamond","Noto Serif Thai",serif;font-style:italic;
+    color:var(--ink-soft);font-size:16px;margin-bottom:16px;
+  }
+  .rsvp-contact-list{
+    display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  }
+  .contact-item{
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    text-decoration:none;color:var(--ink);
+    padding:14px 24px;min-width:180px;
+    border:1px solid var(--line);border-radius:14px;
+    background:rgba(255,255,255,.5);
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .contact-item:hover{
+    transform:translateY(-2px);
+    border-color:var(--rose-deep);
+    box-shadow:0 8px 22px rgba(209,141,139,.18);
+  }
+  .contact-role{
+    font-family:"Cormorant Garamond","Noto Serif Thai",serif;
+    font-size:14px;color:var(--ink-soft);
+  }
+  .contact-phone{
+    font-family:"Italiana","Noto Serif Thai",serif;
+    font-size:20px;color:var(--rose-deep);letter-spacing:.5px;
+  }
 
   /* ───────────── Footer signoff ───────────── */
   .footer{
@@ -980,6 +1050,53 @@
     .topnav{display:none}
   }
 
+  /* ───────────── Mobile / phone tuning ───────────── */
+  @media (max-width: 600px){
+    main{padding:0 18px}
+
+    /* Hero */
+    .monogram-circle{width:118px;height:118px;margin-bottom:24px}
+    .monogram-circle .m-text{font-size:50px}
+    .monogram-circle .m-text .amp{font-size:30px}
+    .hero-date{letter-spacing:.22em;font-size:12px}
+    .hero-loc{white-space:normal}
+
+    /* Date / big-date */
+    .big-date{gap:16px;max-width:100%}
+    .big-date .part{flex:0 1 auto;min-width:0}
+    .big-date .part .value{font-size:clamp(40px,11vw,54px);white-space:nowrap}
+    .big-date .part .sub{font-size:13px}
+
+    /* Countdown — let the 4 units share the row instead of overflowing */
+    .countdown{gap:5px;margin-top:24px}
+    .countdown .unit{min-width:0;padding:14px 3px;border-radius:10px}
+    .countdown .colon{font-size:20px}
+
+    /* Program — narrower time column */
+    .prog-row{grid-template-columns:58px 1px 1fr;gap:14px;padding:18px 0}
+    .prog-time{font-size:20px}
+    .prog-body .ttl{font-size:20px}
+
+    /* Map */
+    .map-card iframe{height:240px}
+
+    /* RSVP contact cards stack full-width and stay tappable */
+    .rsvp-contact-list{flex-direction:column;align-items:stretch;gap:12px}
+    .contact-item{min-width:0;width:100%}
+  }
+
+  /* Extra-narrow phones (≤360px) */
+  @media (max-width: 360px){
+    main{padding:0 14px}
+    .countdown{gap:4px}
+    .countdown .unit{padding:12px 2px}
+    .countdown .unit .l{font-size:8px;letter-spacing:.1em}
+    .countdown .colon{display:none}
+    .big-date{gap:12px}
+    .big-date .part .value{font-size:clamp(36px,12vw,46px)}
+    .hero-names{font-size:clamp(46px,13vw,60px)}
+  }
+
   /* focus styling */
   button:focus-visible, a:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px}
 </style>
@@ -991,7 +1108,7 @@
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel" src="tweaks-panel.jsx?v=20260726c"></script>
-<script type="text/babel" src="site.jsx?v=20260726c"></script>
+<script type="text/babel" src="tweaks-panel.jsx?v=20260726g"></script>
+<script type="text/babel" src="site.jsx?v=20260726g"></script>
 </body>
 </html>
