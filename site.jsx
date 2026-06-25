@@ -450,7 +450,10 @@ function Calendar({ dateISO }) {
   const [view, setView] = useState(() => new Date(target.getFullYear(), target.getMonth(), 1));
   useEffect(() => {setView(new Date(target.getFullYear(), target.getMonth(), 1));}, [target]);
 
-  const monthName = view.toLocaleString('en-US', { month: 'long' });
+  const TH_MONTHS = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+  const TH_DOWS = ['อา.', 'จ.', 'อ.', 'พ.', 'พฤ.', 'ศ.', 'ส.'];
+  const TH_DOWS_FULL = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+  const monthName = TH_MONTHS[view.getMonth()];
   const year = view.getFullYear();
   const firstDow = new Date(year, view.getMonth(), 1).getDay();
   const daysInMonth = new Date(year, view.getMonth() + 1, 0).getDate();
@@ -463,10 +466,10 @@ function Calendar({ dateISO }) {
   }
   while (cells.length % 7 !== 0) cells.push({ day: cells.length - daysInMonth - firstDow + 1, muted: true });
 
-  const dows = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const eventDow = target.toLocaleString('en-US', { weekday: 'long' });
+  const dows = TH_DOWS;
+  const eventDow = TH_DOWS_FULL[target.getDay()];
   const eventDay = target.getDate();
-  const eventMonth = target.toLocaleString('en-US', { month: 'long' });
+  const eventMonth = TH_MONTHS[target.getMonth()];
 
   return (
     <div className="calendar">
@@ -487,14 +490,14 @@ function Calendar({ dateISO }) {
         </div>
       </div>
       <div className="cal-grid">
-        {dows.map((d, i) => <div key={'h' + i} className="cal-dow">{d.slice(0, 3)}</div>)}
+        {dows.map((d, i) => <div key={'h' + i} className="cal-dow">{d}</div>)}
         {cells.map((c, i) =>
         <div key={i} className={`cal-cell ${c.muted ? 'muted' : ''} ${c.event ? 'event' : ''}`}>{c.day}</div>
         )}
       </div>
       <div className="cal-footer">
         <span className="dot"></span>
-        <span>{eventDow}, {eventMonth} {eventDay}, {year}</span>
+        <span>{eventDow}ที่ {eventDay} {eventMonth} {year}</span>
       </div>
     </div>);
 
@@ -731,6 +734,12 @@ function ProgramSection({ t }) {
 
 }
 
+// 0650168536 → "065 016 8536" (อ่านง่ายขึ้น) — ส่วน href tel: ใช้ตัวเลขดิบ
+function fmtPhone(p) {
+  const d = String(p || '').replace(/\D/g, '');
+  return d.length === 10 ? `${d.slice(0, 3)} ${d.slice(3, 6)} ${d.slice(6)}` : (p || '');
+}
+
 function RsvpSection({ t }) {
   const calHref = useMemo(() => {
     const start = new Date(`${t.dateISO}T${t.ceremonyTime}:00`);
@@ -821,13 +830,13 @@ function RsvpSection({ t }) {
           {t.bridePhone &&
           <a className="contact-item" href={`tel:${t.bridePhone}`}>
               <span className="contact-role">เจ้าสาว · {t.brideNick}</span>
-              <span className="contact-phone">☎ {t.bridePhone}</span>
+              <span className="contact-phone">☎ {fmtPhone(t.bridePhone)}</span>
             </a>
           }
           {t.groomPhone &&
           <a className="contact-item" href={`tel:${t.groomPhone}`}>
               <span className="contact-role">เจ้าบ่าว · {t.groomNick}</span>
-              <span className="contact-phone">☎ {t.groomPhone}</span>
+              <span className="contact-phone">☎ {fmtPhone(t.groomPhone)}</span>
             </a>
           }
         </div>
