@@ -7,7 +7,7 @@ const { useState, useEffect, useRef, useMemo, useCallback } = React;
 // วาง "Web app URL" ที่ได้จากการ Deploy Google Apps Script ตรงนี้
 // (ขั้นตอนอยู่ในไฟล์ apps-script/README.md) ถ้าเว้นว่างไว้ ฟอร์มจะยัง
 // ทำงานได้แต่ไม่บันทึกลงชีต
-const RSVP_ENDPOINT = ""; // เช่น "https://script.google.com/macros/s/AKfyc.../exec"
+const RSVP_ENDPOINT = "https://script.google.com/macros/s/AKfycby6HBn2CSGRkh42CO3PnKons3zowH4aQDtm2ll3YXHhi1CVspKRZpDy_pObOgTGiAE-/exec";
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "groomFirst": "Sukiflee",
